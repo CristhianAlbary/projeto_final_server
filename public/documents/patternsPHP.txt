@@ -1,0 +1,30 @@
+object literal: {
+
+    function callPatternFunctions($id) {
+        return $this->patternTest($id);
+    }
+
+    function patternTest($id) {
+        $objectFunctions = [
+            // static params
+            0 => [
+                "subtract": 500
+            ],
+            // function 1
+            1 => function() {
+                return 10 * 1000;
+            },
+            // function 2
+            2 => function() {
+                return 15 * 1000;
+            },
+            // function 3 use static param at position 0
+            3 => function() use(&$objectFunctions) {
+                return ((20 * 1000) - $objectFunctions[0]["subtract"]);
+            }
+        ];
+
+        return $objectFunctions[$id];
+    }
+
+}

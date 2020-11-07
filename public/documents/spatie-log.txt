@@ -1,0 +1,16 @@
+instal spatie activity log
+composer require spatie/laravel-activitylog
+
+publish spatie activity log
+php artisan vendor:publish --provider="Spatie\Activitylog\ActivitylogServiceProvider" --tag="migrations"
+
+run migrate for spatie activity log
+php artisan migrate
+
+publish configs for spatie activity log
+php artisan vendor:publish --provider="Spatie\Activitylog\ActivitylogServiceProvider" --tag="config"
+
+on models import logsActivity
+use Spatie\Activitylog\Traits\LogsActivity;
+inside class
+use LogsActivity;

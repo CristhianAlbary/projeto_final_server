@@ -1,0 +1,13 @@
+Migration:
+    php artisan make:migration
+    php artisan migrate
+    php artisan migrate:fresh
+    php artisan migrate:fresh --seed
+
+Seeder:
+    php artisan make:seeder SeederName
+    php artisan db:seed
+    php artisan db:seed --class=SeederName
+
+Passport:
+    php artisan passport:client --personal

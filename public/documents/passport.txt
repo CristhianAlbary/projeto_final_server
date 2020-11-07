@@ -1,0 +1,118 @@
+instal laravel
+composer require laravel/passport
+
+create tables
+php artisan migrate:fresh
+
+install passport
+php artisan passport:install
+
+move User::class to App\Models\Entity
+copy this to User::class for change extends to Model
+========================================== USER::CLASS ============================================================
+namespace App;
+
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Auth\Authenticatable;
+use Illuminate\Auth\MustVerifyEmail;
+use Illuminate\Auth\Passwords\CanResetPassword;
+use Illuminate\Foundation\Auth\Access\Authorizable;
+use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
+use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
+use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
+use Illuminate\Notifications\Notifiable;
+use Laravel\Passport\HasApiTokens;
+use Spatie\Activitylog\Traits\LogsActivity;
+
+class User extends Model implements AuthenticatableContract, AuthorizableContract, CanResetPasswordContract
+{
+    use Authenticatable, Authorizable, CanResetPassword, MustVerifyEmail, Notifiable, HasApiTokens, LogsActivity;
+
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $fillable = [
+        'login',
+        'password',
+    ];
+
+    /**
+     * The attributes that should be hidden for arrays.
+     *
+     * @var array
+     */
+    protected $hidden = [
+        'password',
+    ];
+}
+==================================================================================================================
+change migration Users
+========================================== Migration =============================================================
+Schema::create('users', function (Blueprint $table) {
+    $table->id();
+    $table->string('name');
+    $table->string('login');
+    $table->string('password');
+    $table->timestamps();
+});
+==================================================================================================================
+create UserSeeder to populate admin credentials
+php artisan make:seeder UserSeeder
+========================================== UserSeeder ============================================================
+DB::table('users')->insert([
+    'name' => 'Cristhian',
+    'login' => 'admin',
+    'password' => bcrypt('admin'),
+    'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+    'updated_at' => Carbon::now()->format('Y-m-d H:i:s')
+]);
+==================================================================================================================
+change auth.php in config on line 71 to App\Models\Entity\User::class
+change api -> driver to passport on config\auth.php on line 45
+
+create Controller to implements auth with passport
+========================================== Controller ============================================================
+namespace App\Http\Controllers;
+
+use App\Services\AuthenticationService;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
+
+class AuthenticationController extends Controller
+{
+    public function authenticate(Request $request, AuthenticationService $authenticationService)
+    {
+        $validator = Validator::make($request->all(), [
+            'login' => 'required|max:30',
+            'password' => 'required|max:50'
+        ]);
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors(), 'success' => false], 400);
+        }
+        return $authenticationService->userAuthenticate(request(['login', 'password']));
+    }
+}
+==================================================================================================================
+create Service to authenticate users
+========================================== Service ===============================================================
+namespace App\Services;
+
+use Illuminate\Support\Facades\Auth;
+
+class AuthenticationService
+{
+    public function userAuthenticate($credentials)
+    {
+        if(!Auth::attempt($credentials)) {
+            return response()->json(['errors' => ['login' => 'Login ou senha incorretos.']]);
+        }
+        $user = request()->user();
+        $token = $user->createToken('token')->accessToken;
+        return response()->json(['data' => $user, 'token' => $token, 'success' => true], 200);
+    }
+}
+==================================================================================================================
+activate passport to authenticate and generate tokens for users
+php artisan passport:client --personal
