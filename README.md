@@ -1,7 +1,7 @@
-# projeto final (server)
 Chat para dar suporte aos clientes. (Server)
 
- Instalação
+Instalação
+
  <ol>
  <li>Faça um pull do projeto em um diretório local.</li>
  <li>Dentro do diretório do projeto, execute o comando [composer install] para instalar todas as dependências necessárias.</li>

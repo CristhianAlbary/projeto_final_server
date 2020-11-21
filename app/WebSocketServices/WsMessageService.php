@@ -2,6 +2,8 @@
 
 namespace App\WebSocketServices;
 
+use Illuminate\Support\Facades\Session;
+
 class WsMessageService
 {
     /**
@@ -13,18 +15,16 @@ class WsMessageService
      */
     public function notifyAllUsers($connections, $element, $content)
     {
-        $count = 0;
-        foreach ($connections as $connection)
+        foreach ($connections as $connection) {
             $connection['conn']->send(json_encode([
                 'element' => $element,
-                'content' => $content,
-                'count' => $count
+                'content' => $content
             ]));
-            $count = $count + 1;
+        }
     }
 
     /**
-     * notify pnly one user with generic messages or objects
+     * notify only one user with generic messages or objects
      * @param array $connections
      * @param string $resourceId
      * @param string $element

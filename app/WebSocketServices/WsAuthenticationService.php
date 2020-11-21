@@ -2,6 +2,7 @@
 
 namespace App\WebSocketServices;
 
+use App\Http\Controllers\WebSocketController;
 use App\Models\Entity\User;
 use Illuminate\Support\Facades\Session;
 
@@ -32,11 +33,27 @@ class WsAuthenticationService
         Session::put('user_' . $userId, json_encode(['resourceId' => $resourceId, 'userId' => $userId]));
         $user = User::find((int) $userId);
         $user['conn'] = $resourceId;
+        array_push(WebSocketController::$users, $user);
         foreach ($connections as $connection) {
             if ($oldSession && $connection['conn']->resourceId == $oldSession->resourceId) {
                 $connection['conn']->close();
             }
         }
-        $this->wsMessageService->notifyAllUsers($connections, $element, $user);
+        $this->wsMessageService->notifyAllUsers($connections, $element, WebSocketController::$users);
+    }
+
+    /**
+     * remove user from online users array
+     * @param integer $connId
+     * @return void
+     */
+    public static function removeUser($connId)
+    {
+        foreach (WebSocketController::$users as $key => $value) {
+            if ($value['conn'] == $connId) {
+                unset(WebSocketController::$users[$key]);
+            }
+        }
+        WebSocketController::$users = array_values(WebSocketController::$users);
     }
 }

@@ -48,7 +48,7 @@ class WebSocketServer extends Command
                 )
             ),
             8010, //port
-            'localhost' //ip address
+            'localhost'
         );
         $server->run();
     }

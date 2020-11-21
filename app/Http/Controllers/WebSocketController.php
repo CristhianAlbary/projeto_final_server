@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\WebSocketServices\WsAuthenticationService;
+use App\WebSocketServices\WsMessageService;
 use Ratchet\MessageComponentInterface;
 use Ratchet\ConnectionInterface;
 use ReflectionClass;
@@ -9,6 +11,7 @@ use ReflectionClass;
 class WebSocketController extends Controller implements MessageComponentInterface
 {
     private $connections = [];
+    public static $users = [];
 
     /**
      * Listen event on open websocket connection
@@ -28,13 +31,10 @@ class WebSocketController extends Controller implements MessageComponentInterfac
     function onClose(ConnectionInterface $conn)
     {
         $disconnectedId = $conn->resourceId;
+        WsAuthenticationService::removeUser($disconnectedId);
         unset($this->connections[$disconnectedId]);
-        foreach ($this->connections as &$connection)
-            $connection['conn']->send(json_encode([
-                'offline_user' => $disconnectedId,
-                'from_user_id' => 'server control',
-                'from_resource_id' => null
-            ]));
+        $msgService = new WsMessageService();
+        $msgService->notifyAllUsers($this->connections, 'WebSocketUserConn', WebSocketController::$users);
     }
 
     /**
