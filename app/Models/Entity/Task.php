@@ -25,7 +25,7 @@ class Task extends Model
 
     public function userOrigem()
     {
-        return $this->belongsTo(User::class, 'usu_origm', 'id');
+        return $this->belongsTo(User::class, 'usu_origem', 'id');
     }
 
     public function userDestino()

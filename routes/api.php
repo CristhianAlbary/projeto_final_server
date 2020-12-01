@@ -12,11 +12,12 @@ Route::group(['prefix' => 'user'], function() {
 });
 
 Route::group(['prefix' => 'task'], function() {
+    Route::get('report/{id}', 'TaskController@report');
     Route::get('find/all', 'TaskController@findAll');
     Route::get('find/by/id/{id}', 'TaskController@findById');
     Route::get('find/by/params/{params}', 'TaskController@findByParam');
 
     Route::post('store', 'TaskController@store');
-    
+
     Route::put('update', 'TaskController@update');
 });

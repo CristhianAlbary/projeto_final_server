@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Entity\Task;
 use App\Services\TaskService;
 use Illuminate\Http\Request;
+use App;
 
 class TaskController extends Controller
 {
@@ -13,6 +15,23 @@ class TaskController extends Controller
     public function __construct()
     {
         $this->taskService = new TaskService();
+    }
+
+    /**
+     * Gera um relatório de todas as tarefas em aberto para um determinado cliente.
+     * @param int $usuDestino
+     * @return mixed
+     */
+    public function report($usuDestino)
+    {
+        $tasks = Task::where('status', 'A')->get();
+        foreach($tasks as $task) {
+            $task->load('userDestino');
+        }
+        $pdf = App::make('dompdf.wrapper');
+        $pdf->loadView('report.report-task', compact('tasks'))
+        ->setPaper('a4', 'landscape');
+        return $pdf->stream();
     }
 
     /**
