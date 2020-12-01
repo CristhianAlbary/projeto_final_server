@@ -50,6 +50,18 @@ class ObjectValidatorService
                 }
                 return true;
             },
+            "Task" => function($object) {
+                $validator = Validator::make($object, [
+                    'usu_origem' => 'required',
+                    'usu_destino' => 'required',
+                    'descricao' => 'required',
+                    'status' => 'required|min:1|max:1',
+                ]);
+                if($validator->fails()) {
+                    return response()->json(['errors' => $validator->errors(), 'origin' => 'task', 'success' => false]);
+                }
+                return true;
+            }
         ];
     }
 }

@@ -50,4 +50,14 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
         return $this->hasMany(Message::class, 'usu_destino', 'id');
     }
 
+    public function taskFrom()
+    {
+        return $this->hasMany(Task::class, 'usu_origem', 'id');
+    }
+
+    public function taskTo()
+    {
+        return $this->hasMany(Task::class, 'usu_destino', 'id');
+    }
+
 }

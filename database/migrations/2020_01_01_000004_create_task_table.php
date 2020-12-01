@@ -18,6 +18,7 @@ class CreateTaskTable extends Migration
             $table->bigInteger('usu_origem');
             $table->bigInteger('usu_destino');
             $table->string('descricao', 2000);
+            $table->char('status', 1);
             $table->timestamps();
 
             $table->foreign('usu_origem')->references('id')->on('users');

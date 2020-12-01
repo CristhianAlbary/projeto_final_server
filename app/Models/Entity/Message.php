@@ -9,6 +9,11 @@ class Message extends Model
     /**
      * @var
      */
+    protected $table = 'message';
+
+    /**
+     * @var
+     */
     protected $fillable = [
         'id',
         'usu_origem',
@@ -16,11 +21,6 @@ class Message extends Model
         'mensagem',
         'status'
     ];
-
-    /**
-     * @var
-     */
-    protected $table = 'message';
 
     public function userOrigem()
     {

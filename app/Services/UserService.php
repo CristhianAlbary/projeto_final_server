@@ -35,7 +35,6 @@ class UserService
             } else {
                 return $objectValidate;
             }
-            DB::commit();
         } catch (\Throwable $err) {
             DB::rollBack();
             return response()->json(['internal_error' => $err->getMessage(), 'line' => $err->getLine()]);

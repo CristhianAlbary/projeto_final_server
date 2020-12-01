@@ -14,9 +14,21 @@ class UserSeeder extends Seeder
     public function run()
     {
         DB::table('users')->insert([
-            'name' => 'Cristhian',
+            'nome' => 'Cristhian',
+            'login' => 'cristhian',
+            'password' => bcrypt('cristhian'),
+            'status' => 'A',
+            'tipo' => 'USU',
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s')
+        ]);
+
+        DB::table('users')->insert([
+            'nome' => 'Admin',
             'login' => 'admin',
             'password' => bcrypt('admin'),
+            'status' => 'A',
+            'tipo' => 'SUP',
             'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
             'updated_at' => Carbon::now()->format('Y-m-d H:i:s')
         ]);
