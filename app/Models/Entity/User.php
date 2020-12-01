@@ -39,4 +39,15 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
     protected $hidden = [
         'password',
     ];
+
+    public function messageFrom()
+    {
+        return $this->hasMany(Message::class, 'usu_origem', 'id');
+    }
+
+    public function messageTo()
+    {
+        return $this->hasMany(Message::class, 'usu_destino', 'id');
+    }
+
 }
