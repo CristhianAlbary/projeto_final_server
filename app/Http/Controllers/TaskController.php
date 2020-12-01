@@ -18,23 +18,6 @@ class TaskController extends Controller
     }
 
     /**
-     * Gera um relatório de todas as tarefas em aberto para um determinado cliente.
-     * @param int $usuDestino
-     * @return mixed
-     */
-    public function report($usuDestino)
-    {
-        $tasks = Task::where('status', 'A')->get();
-        foreach($tasks as $task) {
-            $task->load('userDestino');
-        }
-        $pdf = App::make('dompdf.wrapper');
-        $pdf->loadView('report.report-task', compact('tasks'))
-        ->setPaper('a4', 'landscape');
-        return $pdf->stream();
-    }
-
-    /**
      * Redireciona os dados para a função de validação e armazenamento
      * do objeto no banco de dados
      * @param Request $request
