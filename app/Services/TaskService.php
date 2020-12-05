@@ -56,6 +56,7 @@ class TaskService
                 $objectValidate = $this->validator->validate(Task::class, $data);
                 if (is_bool($objectValidate) && $objectValidate) {
                     $task = Task::find($data['id']);
+                    $task->nome = $data['nome'];
                     $task->descricao = $data['descricao'];
                     $task->status = $data['status'];
                     $task->save();
@@ -88,16 +89,18 @@ class TaskService
      */
     public function findById($id)
     {
-        $task = $this->task->find($id);
+        $task = $this->task->find($id)->orderBy('status');
         return response()->json(['data' => $task, 'success' => true, 'state' => 200]);
     }
 
     /**
-     * Busca uma tarefa de chamado no banco de dados por parametro.
-     * @param mixed $params
+     * Busca todas as tarefas de chamado relacionadas a um cliente.
+     * @param mixed $id
      * @return Task
      */
-    public function findByName($params)
+    public function findByUser($id)
     {
+        $tasks = Task::where('usu_destino', $id)->orderBy('updated_at')->get();
+        return response()->json(['data' => $tasks, 'success' => true, 'state' => 200]);
     }
 }

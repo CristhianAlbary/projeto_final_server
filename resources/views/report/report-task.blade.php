@@ -3,30 +3,40 @@
 @section('title', 'Teste de pdf')
 
 @section('content')
-<table class="table">
-    <thead class="thead-dark">
-        <tr>
-            <th scope="col">Código</th>
-            <th scope="col">Descrição</th>
-            <th scope="col">Data de cadastro</th>
-            <th scope="col">Usuário</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach($tasks as $task)
-        <tr>
-            <th scope="row">{{$task->id}}</th>
-            <td>{{$task->descricao}}</td>
-            <td>{{date('d/m/Y H:i', strtotime($task->created_at))}}</td>
-            <td>{{$task->userDestino->nome}}</td>
-        </tr>
-        @endforeach
-    </tbody>
-</table>
+<div class="container report-body">
+    <div class="item">
+        <h4>Nome:</h4>
+        <h3>{{$task->nome}}</h3>
+    </div>
+    <div class="item">
+        <h4>Status:</h4>
+        @if($task->status == 'A')
+        <h3>Aberto</h3>
+        @else
+        <h3>Fechado</h3>
+        @endif
+    </div>
+    <div class="item">
+        <h4>Descrição:</h4>
+        <h3>{{$task->descricao}}</h3>
+    </div>
+    <div class="item">
+        <h4>Atualizado em:</h4>
+        <h3>{{date('d/m/yyyy', strtotime($task->updated_at))}} as {{date('H:m', strtotime($task->updated_at))}}</h3>
+    </div>
+</div>
 @endsection
 <style>
     .report-title {
         width: 100%;
         text-align: center;
+    }
+
+    .item {
+        border-bottom: 1px solid #dedede;
+    }
+
+    .report-body {
+        margin-top: 100px;
     }
 </style>

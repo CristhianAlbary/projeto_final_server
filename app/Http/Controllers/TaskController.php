@@ -6,6 +6,8 @@ use App\Models\Entity\Task;
 use App\Services\TaskService;
 use Illuminate\Http\Request;
 use App;
+use Illuminate\Support\Facades\Storage;
+use WebSocket\Client as WsClient;
 
 class TaskController extends Controller
 {
@@ -58,11 +60,35 @@ class TaskController extends Controller
     }
 
     /**
-     * Redireciona para a função de buscar uma tarefa por parametro no serviço de tarefas.
-     * @param mixed $params
+     * Redireciona para a função de buscar as tarefas relacionadas a um cliente.
+     * @param mixed $id
      * @return mixed
      */
-    public function findByParam($params)
+    public function findByUser($id)
     {
+        return $this->taskService->findByUser($id);
     }
+
+    /**
+     * Gera um relatório de todas as tarefas em aberto para um determinado cliente.
+     * @param $task
+     * @return mixed
+     */
+    public function report($id, $resourceId, $element)
+    {
+        $task = Task::find($id);
+        $pdf = App::make('dompdf.wrapper');
+        $pdf->loadView('report.report-task', compact('task'))
+        ->setPaper('a4', 'landscape');
+        $pdfFile = $pdf->download()->getOriginalContent();
+        Storage::put('public/report/' . "$task->id" . '.pdf',$pdfFile);
+        $client = new WsClient("ws:/localhost:8015");
+        $client->send(json_encode(['class' => "App\\WebSocketServices\\WsMessageService", 'method' => 'messageServerToUser', 'element' => $element, 'params' => ['resourceId' => $resourceId, 'data' => $task->id]]));
+    }
+
+    public function getPdf($id)
+    {
+        return response()->download(storage_path('app/public/report/' . $id . '.pdf'));
+    }
+
 }

@@ -84,7 +84,12 @@ class ChatMessageService
      */
     public function findConversation($userOriginId, $userDestId)
     {
-        $messages = $this->message->where('usu_origem', $userOriginId)->where('usu_destino', $userDestId)->orderby('created_at', 'desc')->get();
+        $messages = $this->message
+            ->where('usu_origem', $userOriginId)
+            ->where('usu_destino', $userDestId)
+            ->orWhere('usu_origem', $userDestId)
+            ->orWhere('usu_destino', $userOriginId)
+            ->orderby('created_at')->get();
         return response()->json(['data' => $messages, 'success' => true, 'state' => 200]);
     }
 

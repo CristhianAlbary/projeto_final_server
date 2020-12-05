@@ -13,7 +13,7 @@
 <body>
     <div class="container-fluid">
         <div class="report-title">
-            <h2>Realatório de tarefas em aberto</h2>
+            <h2>Chamado - {{$task->id}}</h2>
         </div>
         @yield('content')
     </div>

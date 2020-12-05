@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\Entity\User;
+use App\Models\Utils\Constants;
 use Illuminate\Support\Facades\DB;
 
 class UserService
@@ -63,4 +64,15 @@ class UserService
             return response()->json(['internal_error' => $err->getMessage(), 'line' => $err->getLine()]);
         }
     }
+
+    /**
+     * Busca todos os usuários no banco de dados
+     * @return array
+     */
+    public function findAll()
+    {
+        $users = User::where('tipo', 'USU')->get();
+        return response()->json(['data' => $users, 'success' => true, 'state' => 200]);
+    }
+
 }

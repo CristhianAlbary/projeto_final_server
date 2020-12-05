@@ -15,6 +15,7 @@ class CreateTaskTable extends Migration
     {
         Schema::create('task', function (Blueprint $table) {
             $table->bigInteger('id')->autoIncrement();
+            $table->string('nome', 255)->nullable(false);
             $table->bigInteger('usu_origem');
             $table->bigInteger('usu_destino');
             $table->string('descricao', 2000);

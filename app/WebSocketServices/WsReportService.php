@@ -15,10 +15,12 @@ class WsReportService
      * @param integer $usuDestino
      * @return void
      */
-    public function startreportJob($connections, $resourceId, $element, $usuDestino)
+    public function startreportJob($connections, $resourceId, $element, $id)
     {
-        if($connections && $usuDestino)
-            TaskReportJob::dispatch($resourceId, $element, $usuDestino)->onQueue('reports');
+        if ($connections && $id) {
+            TaskReportJob::dispatch($resourceId, $element, $id);
+            $notify = new WsMessageService();
+            $notify->notifyUser($connections, $resourceId, $element, $id);
+        }
     }
-
 }

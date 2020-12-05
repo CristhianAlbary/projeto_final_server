@@ -36,4 +36,13 @@ class UserController extends Controller
         return $this->userService->update($request->all());
     }
 
+    /**
+     * Retorna todos os usuários cadastrados no banco de dados.
+     * @return array
+     */
+    public function findAll()
+    {
+        return $this->userService->findAll();
+    }
+
 }

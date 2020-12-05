@@ -52,6 +52,7 @@ class ObjectValidatorService
             },
             "Task" => function($object) {
                 $validator = Validator::make($object, [
+                    'nome' => 'required',
                     'usu_origem' => 'required',
                     'usu_destino' => 'required',
                     'descricao' => 'required',

@@ -47,7 +47,7 @@ class WebSocketServer extends Command
                     new WebSocketController()
                 )
             ),
-            8010, //port
+            8015, //port
             'localhost'
         );
         $server->run();

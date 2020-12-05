@@ -40,4 +40,22 @@ class WsMessageService
             ])
         );
     }
+
+    /**
+     * notify only one user with generic messages or objects
+     * @param array $connections
+     * @param string $resourceId
+     * @param string $element
+     * @param mixed $content
+     * @return void
+     */
+    public function messageServerToUser($connections, $resourceId, $element, $content) {
+        $connections[$content['resourceId']]['conn']->send(
+            json_encode([
+                'element' => $element,
+                'content' => $content['data'],
+            ])
+        );
+    }
+
 }
